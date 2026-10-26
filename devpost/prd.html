@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checker — PRD</title>
+<style>
+  :root { --bg:#FAF8F5; --ink:#23201a; --muted:#6f6a5e; --green:#15803d; --amber:#b45309; --red:#b91c1c; --card:#fff; --line:#e5ded2; }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 32px 20px 64px; line-height: 1.55; }
+  main { max-width: 880px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; margin: 0 0 4px; }
+  h1 .neq { color: var(--red); }
+  .one-line { color: var(--muted); margin: 0 0 20px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin: 0 0 16px; }
+  section h2 { font-size: 1.02rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; }
+  svg.flow { width: 100%; height: auto; display: block; }
+  .steps { display: flex; gap: 8px; margin: 12px 0 4px; flex-wrap: wrap; }
+  .steps button { flex: 1 1 120px; border: 1px solid var(--line); background: #f4efe5; border-radius: 10px; padding: 10px; cursor: pointer; font: inherit; font-weight: 700; }
+  .steps button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  #stepbody { border: 1px dashed var(--line); border-radius: 10px; padding: 12px 14px; margin-top: 10px; min-height: 76px; }
+  #stepbody b { display: block; margin-bottom: 4px; }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin: 0 0 12px; }
+  summary { cursor: pointer; font-weight: 700; }
+  details ul { margin: 8px 0 4px; padding-left: 20px; }
+  .pill { display: inline-block; border-radius: 999px; padding: 1px 10px; font-size: .78rem; font-weight: 700; color: #fff; }
+  .g { background: var(--green); } .a { background: var(--amber); } .r { background: var(--red); } .n { background: var(--muted); }
+  .open { border-left: 4px solid var(--amber); }
+  footer { color: var(--muted); font-size: .85rem; margin-top: 20px; }
+  code { background: #f1ece1; padding: 0 5px; border-radius: 5px; font-size: .85em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>CLAIMED <span class="neq">≠</span> DONE Checker — PRD</h1>
+  <p class="one-line">One dashboard page, Checker inside: paste claim + evidence → CHECK IT → one honest verdict.</p>
+
+  <section>
+    <h2>Core journey — click through it</h2>
+    <svg class="flow" viewBox="0 0 820 120" role="img" aria-label="Journey: open page, fill boxes, press check it, read verdict card, calibration examples pass">
+      <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#6f6a5e" stroke-width="1.5"/></marker></defs>
+      <g font-size="13" text-anchor="middle">
+        <rect x="4" y="35" width="140" height="52" rx="10" fill="#fff" stroke="#e5ded2"/><text x="74" y="58">Open page</text><text x="74" y="76" fill="#6f6a5e">empty boxes</text>
+        <line x1="144" y1="61" x2="168" y2="61" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <rect x="172" y="35" width="150" height="52" rx="10" fill="#fff" stroke="#e5ded2"/><text x="247" y="58">Paste / instant-try</text><text x="247" y="76" fill="#6f6a5e">claim + evidence</text>
+        <line x1="322" y1="61" x2="346" y2="61" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <rect x="350" y="35" width="120" height="52" rx="10" fill="#23201a"/><text x="410" y="66" fill="#fff" font-weight="bold">CHECK IT</text>
+        <line x1="470" y1="61" x2="494" y2="61" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <rect x="498" y="14" width="150" height="94" rx="10" fill="#fff" stroke="#e5ded2"/><text x="573" y="36" font-weight="bold">Verdict card</text><text x="573" y="54">one big word</text><text x="573" y="72">lines + checklist</text><text x="573" y="90">meter + ledger</text>
+        <line x1="648" y1="61" x2="672" y2="61" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <rect x="676" y="35" width="140" height="52" rx="10" fill="#fff" stroke="#e5ded2"/><text x="746" y="58">Calibration</text><text x="746" y="76" fill="#6f6a5e">Ex1 ✓ Ex2 ✗</text>
+      </g>
+    </svg>
+    <div class="steps">
+      <button data-s="0" class="on">1 · Arrive</button>
+      <button data-s="1">2 · Fill</button>
+      <button data-s="2">3 · Check</button>
+      <button data-s="3">4 · Verdict</button>
+      <button data-s="4">5 · Prove it</button>
+    </div>
+    <div id="stepbody"><b>1 · Arrive</b>Dashboard shell with the Checker inside: title, two empty boxes, CHECK IT, two example buttons, three static sample cards. No verdict yet.</div>
+  </section>
+
+  <details open>
+    <summary>Behaviors — what each piece does</summary>
+    <ul>
+      <li><b>Paste boxes</b> — "What the agent claimed" / "The evidence." Free text, no input validation.</li>
+      <li><b>Instant-try examples</b> — two buttons fill both boxes with Example One / Example Two.</li>
+      <li><b>CHECK IT</b> — runs the pinned scope logic over the two boxes only. Same boxes → same verdict.</li>
+      <li><b>Verdict card</b> — <span class="pill g">VERIFIED</span> <span class="pill a">CLAIMED-ONLY</span> <span class="pill r">DISPUTED</span> biggest on the page, two plain lines, checklist ✓✗–, STATED→SOLD meter, ledger stamp.</li>
+      <li><b>Sample cards</b> — three static display-only reports along the bottom.</li>
+      <li><b>Proof ledger</b> — live stamp on the card: check mtime + SHA-256 of the two boxes. Display-only, vanishes on reload. <span class="pill n">CONFIRM</span></li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>States — empty, error, success</summary>
+    <ul>
+      <li><b>First use:</b> empty boxes, no card. <span class="pill n">ASSUMPTION</span> card appears only after first check.</li>
+      <li><b>Empty + CHECK IT:</b> <span class="pill n">ASSUMPTION</span> CLAIMED-ONLY with empty checklist.</li>
+      <li><b>Success:</b> one of the three verdicts, full card. Calibration: Ex1 → VERIFIED/TESTED, Ex2 → DISPUTED/STATED.</li>
+      <li><b>Persists:</b> nothing — unless the ledger answer changes it.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Now / deferred / non-goals</summary>
+    <ul>
+      <li><b>Now:</b> one dashboard page, Checker inside, pinned logic, calibration passing.</li>
+      <li><b>Deferred:</b> working group chat + seats + whiteboard, agent purposes (call/text/email/market/book), accounts, history, AI judgment.</li>
+      <li><b>Shell direction:</b> one clean group chat; every agent its own color and shape — its own star.</li>
+      <li><b>Non-goals:</b> 3D walkthrough, scores/percentages, legal proof.</li>
+    </ul>
+  </details>
+
+  <section class="open">
+    <h2>Resolved — confirm at review</h2>
+    <p><b>Ledger:</b> live display-only stamp on the verdict card (check mtime + SHA-256 of the two boxes), vanishing on reload — the only reading that keeps scope's <b>saves nothing</b> rule. Stored history would reopen the scope cut.</p>
+  </section>
+
+  <footer>Companion to <code>devpost/prd.md</code> (canonical, status: draft). Works offline in any browser.</footer>
+</main>
+<script>
+  var steps = [
+    ["1 · Arrive", "Dashboard shell with the Checker inside: title, two empty boxes, CHECK IT, two example buttons, three static sample cards. No verdict yet."],
+    ["2 · Fill", "Paste claim + evidence, or press an instant-try button to fill both boxes with a full example."],
+    ["3 · Check", "CHECK IT runs the pinned logic: split claim into commitments, mark each ✓/✗/–, roll up to one verdict, fill the meter."],
+    ["4 · Verdict", "Giant card: verdict word biggest in green/amber/red, two plain lines, checklist, meter, ledger stamp."],
+    ["5 · Prove it", "Calibration lock: Example One → VERIFIED at TESTED. Example Two → DISPUTED at STATED. The demo."]
+  ];
+  var btns = document.querySelectorAll(".steps button"), body = document.getElementById("stepbody");
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      btns.forEach(function (x) { x.classList.remove("on"); });
+      b.classList.add("on");
+      var s = steps[+b.dataset.s];
+      body.innerHTML = "<b>" + s[0] + "</b>" + s[1];
+    });
+  });
+</script>
+</body>
+</html>

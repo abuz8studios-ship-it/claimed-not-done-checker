@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checker — Spec</title>
+<style>
+  :root { --bg:#FAF8F5; --ink:#23201a; --muted:#6f6a5e; --green:#15803d; --amber:#b45309; --red:#b91c1c; --card:#fff; --line:#e5ded2; }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 32px 20px 64px; line-height: 1.55; }
+  main { max-width: 880px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; margin: 0 0 4px; }
+  h1 .neq { color: var(--red); }
+  .one-line { color: var(--muted); margin: 0 0 20px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin: 0 0 16px; }
+  section h2 { font-size: 1.02rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; }
+  section p { margin: 0 0 8px; }
+  svg.flow { width: 100%; height: auto; display: block; }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin: 0 0 12px; }
+  summary { cursor: pointer; font-weight: 700; }
+  details ul, details ol { margin: 8px 0 4px; padding-left: 20px; }
+  pre { background: #23201a; color: #f4efe5; border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: .85rem; }
+  code { background: #f1ece1; padding: 0 5px; border-radius: 5px; font-size: .85em; }
+  pre code { background: none; padding: 0; }
+  .pill { display: inline-block; border-radius: 999px; padding: 1px 10px; font-size: .78rem; font-weight: 700; color: #fff; background: var(--muted); }
+  .warn { border-left: 4px solid var(--amber); }
+  footer { color: var(--muted); font-size: .85rem; margin-top: 20px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>CLAIMED <span class="neq">≠</span> DONE Checker — Spec</h1>
+  <p class="one-line">Modular static files, unplugged: a pure Check Engine core, thin UI files, and an adapter seam with zero connectors today. No server, no database, no dependencies, works offline.</p>
+
+  <section>
+    <h2>Data flow — one journey through the system</h2>
+    <svg class="flow" viewBox="0 0 820 150" role="img" aria-label="Boxes feed the check engine, engine feeds verdict card, meter and stamp">
+      <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#6f6a5e" stroke-width="1.5"/></marker></defs>
+      <g font-size="13" text-anchor="middle">
+        <rect x="4" y="50" width="130" height="52" rx="10" fill="#fff" stroke="#e5ded2"/><text x="69" y="73">Claim box</text><text x="69" y="91" fill="#6f6a5e">free text</text>
+        <rect x="4" y="8" width="130" height="34" rx="10" fill="#fff" stroke="#e5ded2"/><text x="69" y="30">Example buttons</text>
+        <rect x="150" y="50" width="130" height="52" rx="10" fill="#fff" stroke="#e5ded2"/><text x="215" y="73">Evidence box</text><text x="215" y="91" fill="#6f6a5e">free text</text>
+        <line x1="134" y1="76" x2="168" y2="76" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <line x1="280" y1="76" x2="314" y2="76" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <rect x="318" y="34" width="150" height="84" rx="10" fill="#23201a"/><text x="393" y="60" fill="#fff" font-weight="bold">Check Engine</text><text x="393" y="78" fill="#d8d2c4">commitments → ✓✗–</text><text x="393" y="96" fill="#d8d2c4">roll-up → verdict</text>
+        <line x1="468" y1="60" x2="502" y2="60" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <line x1="468" y1="92" x2="502" y2="92" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <rect x="506" y="14" width="150" height="52" rx="10" fill="#fff" stroke="#e5ded2"/><text x="581" y="37">Verdict card</text><text x="581" y="55" fill="#6f6a5e">word + lines + list</text>
+        <rect x="506" y="76" width="150" height="52" rx="10" fill="#fff" stroke="#e5ded2"/><text x="581" y="99">Meter + stamp</text><text x="581" y="117" fill="#6f6a5e">state + mtime/hash</text>
+        <rect x="672" y="50" width="144" height="52" rx="10" fill="#fff" stroke="#e5ded2" stroke-dasharray="5 4"/><text x="744" y="73">Storage</text><text x="744" y="91" fill="#6f6a5e">none — on purpose</text>
+      </g>
+    </svg>
+    <p>Boxes → engine → card. Nothing is stored; reload wipes everything. That is the product, not a limitation.</p>
+  </section>
+
+  <details open>
+    <summary>Components — each with its PRD home</summary>
+    <ul>
+      <li><b>Page Shell</b> — header + Checker frame → <code>prd.md &gt; Screens and Layout</code></li>
+      <li><b>Claim / Evidence boxes</b> — free text, no validation → <code>Features and Behavior</code></li>
+      <li><b>Example buttons</b> — full texts stored as JS strings → <code>Features and Behavior</code></li>
+      <li><b>CHECK IT</b> — runs engine, renders card → <code>Features and Behavior</code></li>
+      <li><b>Check Engine</b> — pure function, pinned rules + word lists → <code>scope.md &gt; Check Logic</code></li>
+      <li><b>Verdict card + checklist</b> — hidden until first check → <code>States and Boundaries</code></li>
+      <li><b>Meter + ledger stamp</b> — Web Crypto SHA-256, display-only → <code>Features and Behavior</code></li>
+      <li><b>Sample cards</b> — hardcoded, display-only → <code>Features and Behavior</code></li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>File structure</summary>
+    <pre><code>build-with-ai-basics/
+├── index.html     # shell + mount points + script tags
+├── css/style.css  # all visual rules
+├── js/engine.js   # THE CORE — pure check, depends on nothing
+├── js/stamp.js    # ledger stamp (mtime + SHA-256)
+├── js/examples.js # calibration fixture texts
+├── js/adapters/registry.js  # plugin seam, zero connectors today
+├── js/app.js      # wiring: events → engine → render → sinks
+├── README.md
+└── devpost/       # docs + companions</code></pre>
+  </details>
+
+  <details>
+    <summary>Stack &amp; run</summary>
+    <ul>
+      <li><b>Stack:</b> modular static files, classic scripts (ES modules break on <code>file://</code>), zero dependencies. <span class="pill">YOUR CHOICE — confirm</span></li>
+      <li><b>Seam:</b> sources + sinks registry; MCP/Google/Microsoft plug in later as one file each.</li>
+      <li><b>Run:</b> double-click <code>index.html</code>. Offline OK. No keys, no install.</li>
+      <li><b>Demo:</b> Example One → VERIFIED; Example Two → DISPUTED. Under a minute.</li>
+      <li><b>Deploy:</b> optional; GitHub Pages would host it free, decided at ship.</li>
+    </ul>
+  </details>
+
+  <section class="warn">
+    <h2>Watch in the build</h2>
+    <p>Confirm <code>crypto.subtle</code> exists on <code>file://</code> in the demo browser (fallback: stamp shows mtime + "hash unavailable"). Run both calibration examples — if either misses, fix the word lists, never the examples.</p>
+  </section>
+
+  <footer>Companion to <code>devpost/spec.md</code> (canonical, status: draft). Works offline in any browser.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checker — App Map</title>
+<style>
+  :root { --bg:#FAF8F5; --ink:#23201a; --muted:#6f6a5e; --green:#15803d; --amber:#b45309; --red:#b91c1c; --card:#fff; --line:#e5ded2; }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 32px 20px 64px; line-height: 1.55; }
+  main { max-width: 860px; margin: 0 auto; }
+  h1 { margin: 0 0 4px; } h1 .neq { color: var(--red); }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin: 0 0 16px; }
+  section h2 { font-size: 1.02rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; }
+  svg.flow { width: 100%; height: auto; display: block; }
+  code { background: #f1ece1; padding: 0 5px; border-radius: 5px; font-size: .85em; }
+  ol, ul { margin: 8px 0 4px; padding-left: 20px; }
+  li { margin: 6px 0; }
+  footer { color: var(--muted); font-size: .85rem; margin-top: 20px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>CLAIMED <span class="neq">≠</span> DONE Checker — App Map</h1>
+  <p class="sub">Take-home guide. Snapshot of code at commit <code>aa7a735</code> — it can drift as the code changes.</p>
+
+  <section>
+    <h2>What it is</h2>
+    <p>Paste an agent's claim and its evidence, press CHECK IT, get one honest verdict. Pieces: a page shell (<code>index.html</code>), a pure check core (<code>js/engine.js</code>, depends on nothing), a ledger stamp (<code>js/stamp.js</code>), fixed example texts (<code>js/examples.js</code>), a plugin seam (<code>js/adapters/registry.js</code>), and wiring (<code>js/app.js</code>). No server, no storage, no dependencies.</p>
+  </section>
+
+  <section>
+    <h2>One action through the code</h2>
+    <svg class="flow" viewBox="0 0 800 120" role="img" aria-label="Press check it in app.js, engine check returns verdict, card renders in index.html">
+      <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#6f6a5e" stroke-width="1.5"/></marker></defs>
+      <g font-size="13" text-anchor="middle">
+        <rect x="4" y="35" width="180" height="52" rx="10" fill="#fff" stroke="#e5ded2"/><text x="94" y="58" font-weight="bold">Press CHECK IT</text><text x="94" y="76" fill="#6f6a5e">js/app.js listener</text>
+        <line x1="184" y1="61" x2="212" y2="61" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <rect x="216" y="35" width="200" height="52" rx="10" fill="#23201a"/><text x="316" y="58" fill="#fff" font-weight="bold">check(claim, evidence)</text><text x="316" y="76" fill="#d8d2c4">js/engine.js → verdict</text>
+        <line x1="416" y1="61" x2="444" y2="61" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <rect x="448" y="35" width="180" height="52" rx="10" fill="#fff" stroke="#e5ded2"/><text x="538" y="58" font-weight="bold">Verdict card renders</text><text x="538" y="76" fill="#6f6a5e">index.html #verdictCard</text>
+        <line x1="628" y1="61" x2="656" y2="61" stroke="#6f6a5e" stroke-width="1.5" marker-end="url(#a)"/>
+        <rect x="660" y="35" width="136" height="52" rx="10" fill="#fff" stroke="#e5ded2"/><text x="728" y="58" font-weight="bold">Stamp + sinks</text><text x="728" y="76" fill="#6f6a5e">stamp.js, registry</text>
+      </g>
+    </svg>
+  </section>
+
+  <section>
+    <h2>Reference route (3 stops — not toured live)</h2>
+    <ol>
+      <li><code>js/app.js</code> — search <code>checkBtn</code>: the click handler. Reads both boxes, calls the engine, renders the card, stamps, fires sinks.</li>
+      <li><code>js/engine.js</code> — search <code>function check</code>: commitments split, each marked support/dispute/unknown by literal word lists, rolled up to one verdict plus meter. The whole law on one screen.</li>
+      <li><code>index.html</code> — search <code>verdictCard</code>: where the verdict word, lines, checklist, meter, and stamp land.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>To change this, start here</h2>
+    <ul>
+      <li><b>Verdict too strict/loose</b> → the word lists at the top of <code>js/engine.js</code> (<code>TERMINAL_STEMS</code>, <code>CONTRADICTION</code>, <code>RUN_MARKERS</code>). Re-run both examples after any change.</li>
+      <li><b>Card layout/wording</b> → <code>index.html</code> (<code>verdictCard</code>) and <code>js/app.js</code> (<code>render</code>).</li>
+      <li><b>Look</b> → <code>css/style.css</code>. Verdict colors: <code>.v-VERIFIED</code> / <code>.v-CLAIMED-ONLY</code> / <code>.v-DISPUTED</code>.</li>
+      <li><b>Future connector (MCP/Google/Microsoft)</b> → new file + one line in <code>js/adapters/registry.js</code>. Never touch <code>engine.js</code>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>A practice to reuse</h2>
+    <p><b>Pin the verdict before building the page.</b> The two calibration examples in <code>js/examples.js</code> were fixed in <code>devpost/scope.md &gt; The Check Logic (Pinned)</code> before any code existed, with the rule "fix the logic, not the examples." Every slice re-ran them through the real engine (<code>node</code> requiring <code>js/engine.js</code>) and required EX1 → VERIFIED/TESTED, EX2 → DISPUTED/STATED. On your next agent-built project: write the two examples that prove honesty first, and make the build answer to them.</p>
+  </section>
+
+  <section>
+    <h2>Run it again</h2>
+    <p>Double-click <code>index.html</code> — no install, no network. Press an example button, then CHECK IT.</p>
+  </section>
+
+  <footer>Generated from finished code. Reopen anytime: <code>devpost/app-map.html</code>.</footer>
+</main>
+</body>
+</html>
